@@ -9,14 +9,13 @@
 \usepackage{caption}
 
 \title{Multi-modal recommender system for\\content streaming platforms}
-\subtitle{Trabajo Final del Máster en Ciencia de Datos\\
-Universitat Oberta de Catalunya}
+\subtitle{Trabajo Final del Máster Universitario en Ciencia de Datos\\Universitat Oberta de Catalunya}
 \date{\today}
 \author{José María Tagarro Martí}
 \institute{Area: Data science in complex systems, sustainability and ecology\\Tutor: Francesc Julbe López\\Profesora: Susana Acedo Nadal}
 
 \begin{document}
-
+\metroset{block=fill}
 % Portada
 \maketitle
 
@@ -29,28 +28,34 @@ Universitat Oberta de Catalunya}
 \section{Introducción}
 \begin{frame}{Contexto y motivación}
     \textbf{El mercado de \textit{streaming} enfrenta nuevos retos:}
+    \pause
     \begin{itemize}
-        \item \textbf{Fragmentación del mercado:} El aumento de plataformas compitiendo por contenido exclusivo está reduciendo el control de cada plataforma sobre la calidad y amplitud de su catálogo.
+        \item \textbf{Fragmentación del catálogo:} El aumento de plataformas compitiendo por contenido exclusivo está reduciendo el control de cada plataforma sobre sus contenidos.
+        \pause
         \item \textbf{Competencia creciente:} Las plataformas necesitan encontrar ventajas competitivas sostenibles que vayan más allá de su catálogo.
-        \item \textbf{La experiencia del usuario como diferenciador:} 
-        Mejorar las recomendaciones personalizadas es clave para retener usuarios y aumentar el engagement, creando una ventaja competitiva basada en factores que las plataformas sí pueden controlar.
     \end{itemize}
+    \pause
+    \begin{alertblock}{La experiencia del usuario como diferenciador}
+    Mejorar las \textbf{recomendaciones personalizadas} es clave para retener usuarios y aumentar el \textit{engagement}, creando una ventaja competitiva basada en factores que las plataformas sí pueden controlar.
+    \end{alertblock}
+    
 \end{frame}
 
 % Problem Description
-\section{Descripción del problema}
+\section{Desafíos}
 
-\begin{frame}{Descripción del problema}
+\begin{frame}{Desafíos}
+    \pause
     \begin{itemize}
         \item \textbf{Escalabilidad:} 
         Manejar recomendaciones personalizadas para catálogos con miles de títulos y millones de usuarios requiere algoritmos altamente eficientes y/o arquitecturas avanzadas.
-
+        \pause
         \item \textbf{Recomendaciones en tiempo real:} 
         Las sugerencias, como contenido relacionado tras ver una película, deben generarse en milisegundos para mejorar la experiencia del usuario.
-        
+        \pause
         \item \textbf{\textit{Cold Start}:} 
         Es difícil recomendar contenido nuevo sin interacciones previas o a usuarios que apenas comienzan a usar la plataforma. Clave durante pruebas gratuitas promocionales.
-        
+        \pause
         \item \textbf{\textit{Long Tail}:} 
         Gran parte del contenido del catálogo, menos popular pero potencialmente relevante, suele quedar fuera de las recomendaciones, afectando la diversidad y descubrimiento.
         
@@ -58,7 +63,7 @@ Universitat Oberta de Catalunya}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Problema de la larga cola}
+\begin{frame}{Problema del \textit{long tail}}
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{images/ranking_of_movies_by_ratings.pdf}
@@ -68,12 +73,17 @@ Universitat Oberta de Catalunya}
 % Goals and Contributions
 \section{Objetivos y contribuciones}
 \begin{frame}{Objetivos y contribuciones}
+\pause
     \textbf{Objetivo principal:} Implementar un sistema de recomendación que otorgue una ventaja competitiva a las plataformas de contenidos. \\
+    \pause
     \vspace{0.5cm}
     \textbf{Contribuciones clave / innovaciones:}
+    \pause
     \begin{itemize}
         \item Primera aplicación de DMRL en plataformas de streaming.
+        \pause
         \item Creación de un dataset multimodal extendido basado en MovieLens-20M con inclusión de subtítulos y pósters.
+        \pause
         \item Exploración del impacto de las nuevas modalidades en los problemas de \textit{cold start} y \textit{long tail}.
     \end{itemize}
 \end{frame}
@@ -82,11 +92,14 @@ Universitat Oberta de Catalunya}
 \section{Descripción del dataset}
 
 \begin{frame}{Métricas del dataset}
+\pause
     \begin{itemize}
         \item \textbf{Número total de películas:} 27.278
         \item \textbf{Número total de usuarios:} 138.493
         \item \textbf{Número total de interacciones (ratings):} 20.000.263
+        \pause
         \item \textbf{Pósters disponibles:} 26.938 (99\%)
+        \pause
         \item \textbf{Subtítulos disponibles:} 22.473 (78\%)
     \end{itemize}
 \end{frame}
@@ -156,22 +169,55 @@ Universitat Oberta de Catalunya}
 % Model Description
 \section{Descripción del modelo DMRL}
 \begin{frame}{¿Qué es \textit{disentangled representation learning}?}
+\pause
+\begin{itemize}
+    \item Codificación en factores latentes \pause \textbf{independientes}
+    \pause
+    \item Funciones de pérdida específicas:
+    \pause
+    \begin{itemize}
+        \item Regularización: penaliza correlaciones e información mutua
+        \pause
+        \item Reconstrucción: penaliza baja representatividad.
+        \pause
+    \end{itemize}
+    \pause
+    \item Aprendizaje de separación de factores:
+    \pause
+    \begin{itemize}
+        \item En imágenes: color, forma, orientación, etc.
+        \pause
+        \item En texto: tema, tono, estilo, etc.
+    \end{itemize}
+\end{itemize}
+\vspace{0.5cm}
+\pause
+\begin{alertblock}{Característica clave}
+La generación de los \textit{embeddings} de las modalidades es \textbf{crítica}.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}{¿Qué es \textit{disentangled representation learning}?}
+
     \begin{figure}
         \centering
         \includegraphics[width=0.9\textwidth]{images/disentangled-representation-learning.png}
     \end{figure}
+
 \end{frame}
 
-\begin{frame}{¿Por qué se eligió el modelo DMRL?}
-    \begin{itemize}
-        \item \textbf{\textit{Disentangled representation learning}}: 
-        \begin{itemize}
-            \item Captura preferencias de usuarios sobre factores específicos (e.g., calidad, apariencia) para diferentes modalidades.
-            \item Reduce redundancias en la representación de características y mejora la personalización y la explicabilidad.
-        \end{itemize}
-        \item \textbf{Multimodalidad real}: Información visual y textual simultáneamente.
-        \item \textbf{\textit{Attention is all you need}}: Mecanismo de atención para ponderar la los factores según el historial de valoraciones.
-    \end{itemize}
+\begin{frame}{¿Cómo se aplica a recomendaciones?}
+\pause
+\begin{itemize}
+    \item \textbf{\textit{Disentangled multimodal representation learning}}: La representación de las películas mediante factores independientes mejora las comparaciones entre ellas.
+    \pause
+    \item \textbf{\textit{Embedding} del usuario}: Es el promedio ponderado  por el \textit{rating} de las peliculas que ha valorado: más peso a películas valoradas positivamente.
+    \pause
+    \item \textbf{Computacionalmente eficiente}: El calculo de las recomendaciones se basa únicamente en distancias entre \textit{embeddings} de usuarios y películas, fácilmente escalable.
+    \pause
+    \item \textbf{\textit{Attention is all you need}}: Mecanismo de atención para ponderar las modalidades según el historial de valoraciones.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Arquitectura de DMRL}
@@ -184,7 +230,30 @@ Universitat Oberta de Catalunya}
 % Resultados Experimentales Section
 \section{Resultados experimentales}
 
-\section*{Extracción de características}
+\begin{frame}{Resultados experimentales}
+\begin{itemize}
+\item Extracción de características multimodales
+\pause
+    \begin{itemize}
+        \item Sentence Transformers
+        \pause
+        \item BERT con \textit{mean pooling}
+    \end{itemize}
+\pause
+\vspace{0.5cm}
+\item Resultados del modelo DMRL
+\pause
+    \begin{itemize}
+        \item DMRL-A: VGG16 CNN 25.088-D
+        \pause
+        \item DMRL-B: VGG16 CNN PCA 300-D
+        \pause
+        \item DMRL-C: VGG16 FC2 4.096-D
+        \pause
+        \item DMRL-D: ViT 1.204-D
+    \end{itemize}
+\end{itemize}
+\end{frame}
 
 \begin{frame}{Subtítulos: SentenceTransformers}
     \begin{table}[t]{}
@@ -280,42 +349,90 @@ Universitat Oberta de Catalunya}
     \end{figure}
 \end{frame}
 
+\begin{frame}{\textit{Cold start} y \textit{long tail}}
+
+\begin{table}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{ % Scales the table to the width of the page
+        \begin{tabular}{l r r r r r r r}
+            \hline
+            \textbf{Model} & \textbf{Img\_FE} & \textbf{Img\_Dim} & \textbf{Text\_Dim} & \textbf{NDCG@10} & \textbf{NDCG@20} & \textbf{Recall@10} & \textbf{Recall@20} \\ 
+            \hline
+            MF & N/A & N/A & N/A & 0.0766 & 0.0817 & 0.0435 & 0.0795 \\ 
+            GlobalAvg             & N/A & N/A & N/A & 0.0050 & 0.0061 & 0.0028 & 0.0055 \\ 
+            TopPop                & N/A & N/A & N/A & 0.1337 & 0.1337 & 0.0734 & 0.1199 \\ 
+            WBPR                  & N/A & N/A & N/A & 0.2325 & 0.2339 & 0.1412 & 0.2162 \\ 
+            DMRL-B                  & VGG16 & 4,096 & 768 & 0.1682 & 0.2022 & 0.1417 & 0.2534 \\ 
+            \hline
+        \end{tabular}
+    }
+    \caption*{Simulated \textit{cold start}.}
+    \label{tab:model_comparison_coldstart}
+\end{table}
+
+
+\begin{table}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{ % Scales the table to the width of the page
+        \begin{tabular}{l r r r r r r r}
+            \hline
+            \textbf{Model} & \textbf{Img\_FE} & \textbf{Img\_Dim} & \textbf{Text\_Dim} & \textbf{NDCG@10} & \textbf{NDCG@20} & \textbf{Recall@10} & \textbf{Recall@20} \\ 
+            \hline
+            MF & N/A & N/A & N/A & 0.0759 & 0.0801 & 0.0432 & 0.0768 \\ 
+            GlobalAvg             & N/A & N/A & N/A & 0.0050 & 0.0063 & 0.0028 & 0.0061 \\ 
+            TopPop                & N/A & N/A & N/A & 0.1297 & 0.1303 & 0.0721 & 0.1181 \\ 
+            WBPR                  & N/A & N/A & N/A & 0.2272 & 0.2293 & 0.1369 & 0.2105 \\ 
+            DMRL-B                  & VGG16 & 4,096 & 768 & 0.1603 & 0.1973 & 0.1361 & 0.2504 \\ 
+            \hline
+        \end{tabular}
+    }
+    \caption*{Simulated \textit{long tail}.}
+    \label{tab:model_comparison_longtail}
+\end{table}
+
+\end{frame}
+
 % Architectural Considerations
 \section{Consideraciones arquitectónicas}
 \begin{frame}{Consideraciones arquitectónicas}
+Separar las recomendaciones en dos \textit{pipelines}:
+\pause
     \begin{itemize}
-        \item \textbf{Escalabilidad:} 
-        Adaptación para millones de usuarios y catálogos dinámicos con miles de títulos.
         \item \textbf{Recomendaciones en tiempo real:}
         Respuestas en el orden de milisegundos, utilizando embeddings precalculados y técnicas como ANN (\textit{Approximate Nearest Neighbors}).
+        \pause
         \item \textbf{Recomendaciones por lotes:} 
         Uso de pipelines nocturnos para actualizar embeddings, con recomendaciones almacenados en memoria mediante soluciones como Redis.
-        \item \textbf{Cambio de modelos:} 
-        Enfoque de repositorios centralizados que permite cambios rápidos en los modelos y rollback inmediato en caso de fallos.
     \end{itemize}
+\pause
+\textbf{Repositorio centralizado de modelos:} 
+        Permite cambios rápidos entre modelos y \textit{rollback} inmediato en caso de fallos.
 \end{frame}
 
 \begin{frame}{Propuesta arquitectónica}
     \begin{figure}
     \centering
-        \includegraphics[width=0.9\textwidth]{images/tfm-arch.drawio.pdf}
+        \includegraphics[width=\textwidth]{images/tfm-arch.drawio.pdf}
     \end{figure}
 \end{frame}
 
 \section{Ventajas competitivas}
 \begin{frame}{Ventajas competitivas}
     \textbf{Características innovadoras:}
+    \pause
     \begin{itemize}
-        \item Mejor experiencia de usuario por la sensación de serendipia y novedad de la mayor personalización de recomendaciones.
-        \item Mejores recomendaciones a nuevos usuarios y de contenidos relacionados.
-        \item Recomendaciones de calidad incluso en la \textit{long tail}.
+        \item Mejor experiencia de usuario por la sensación de serendipia y novedad de la mayor personalización de recomendaciones. \pause
+        \item Mejores recomendaciones a nuevos usuarios y de contenidos relacionados. \pause
+        \item Recomendaciones de calidad incluso en la \textit{long tail}. \pause
         \item \textit{Framework} para rápida experimentación y despliegue.
     \end{itemize}
+    \pause
     \textbf{Ventajas clave:}
+    \pause
     \begin{itemize}
-        \item Menor \textit{churn rate} por mayor lealtad de usuarios.
-        \item Aumento de ingresos por mayores conversión y \textit{engagement}.
-        \item Reducción de costes por mejor explotación del catálogo.
+        \item Menor \textit{churn rate} por mayor lealtad de usuarios. \pause
+        \item Aumento de ingresos por mayores conversión y \textit{engagement}. \pause
+        \item Reducción de costes por mejor explotación del catálogo. \pause
         \item Preparada para la rápida evolución de los modelos de IA.
     \end{itemize}
 \end{frame}
@@ -324,10 +441,15 @@ Universitat Oberta de Catalunya}
 \section{Trabajo futuro}
 \begin{frame}{Trabajo futuro}
     \textbf{Posibles direcciones:}
+    \pause
     \begin{itemize}
         \item Extender el sistema a datasets más grandes como MovieLens-20M.
+        \pause
         \item Integrar modalidades adicionales como grafos de metadatos y sentimiento de reseñas.
-        \item Explotar los factores empleados por DMRL tanto para explicabilidad como para herramientas de búsqueda innovadoras.
+        \pause
+        \item Explotar los factores empleados por DMRL tanto para explicabilidad como para 
+        herramientas de búsqueda innovadoras.
+        \pause
         \item Validar en entornos reales mediante pruebas A/B.
     \end{itemize}
 \end{frame}
@@ -335,9 +457,12 @@ Universitat Oberta de Catalunya}
 % Conclusions
 \section{Conclusiones}
 \begin{frame}{Conclusiones}
+\pause
     \begin{itemize}
         \item Los datos multimodales mejoran la personalización de las recomendaciones incluso sin ajuste de hiperparámetros.
+        \pause
         \item Las técnicas de extraccion de las características multimodales son clave en el rendimiento.
+        \pause
         \item DMRL aborda con éxito problemas clave como \textit{cold start} y \textit{long tail}.
     \end{itemize}
 \end{frame}
